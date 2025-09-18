@@ -1,3 +1,2 @@
-fieldmask/bin/
-fieldmask/obj/
-fieldmask/.git/
+*/bin/
+*/obj/
