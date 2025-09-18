@@ -1,0 +1,14 @@
+d:\usm\design_models\field_mask\bin\Debug\net9.0\field_mask.exe
+D:\usm\design_models\field_mask\bin\Debug\net9.0\field_mask.deps.json
+D:\usm\design_models\field_mask\bin\Debug\net9.0\field_mask.runtimeconfig.json
+d:\usm\design_models\field_mask\bin\Debug\net9.0\field_mask.dll
+d:\usm\design_models\field_mask\bin\Debug\net9.0\field_mask.pdb
+d:\usm\design_models\field_mask\obj\Debug\net9.0\field_mask.GeneratedMSBuildEditorConfig.editorconfig
+d:\usm\design_models\field_mask\obj\Debug\net9.0\field_mask.AssemblyInfoInputs.cache
+d:\usm\design_models\field_mask\obj\Debug\net9.0\field_mask.AssemblyInfo.cs
+d:\usm\design_models\field_mask\obj\Debug\net9.0\field_mask.csproj.CoreCompileInputs.cache
+d:\usm\design_models\field_mask\obj\Debug\net9.0\field_mask.dll
+d:\usm\design_models\field_mask\obj\Debug\net9.0\refint\field_mask.dll
+d:\usm\design_models\field_mask\obj\Debug\net9.0\field_mask.pdb
+D:\usm\design_models\field_mask\obj\Debug\net9.0\field_mask.genruntimeconfig.cache
+D:\usm\design_models\field_mask\obj\Debug\net9.0\ref\field_mask.dll
