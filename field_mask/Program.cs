@@ -3,7 +3,7 @@
 //экземпляр класса Database
 var db = new Database();
 
-var patient1 = new Patient("John Doe", 30, 70.5f, GenderEnum.Male);
+var patient1 = new Patient("John Doe", age: 30, weight: 70.5f, GenderEnum.Male);
 db.Add(patient1);
 var patient2 = new Patient("Jane Smith", 25, 60.1f, GenderEnum.Female);
 db.Add(patient2);
@@ -23,9 +23,9 @@ var ageMask = new PatientFieldMask
     Age = true
 };
 
-var biteMask = PatientFields.Name | PatientFields.Age;
+var bitMask = PatientFields.Name | PatientFields.Age;
 
-var mergedPatient = Patient.MergePatients(patient1, patient2, biteMask);
+var mergedPatient = Patient.MergePatients(patient1, patient2, bitMask);
 Console.WriteLine("Merged Patient:");
 Patient.PrintByBoolMask(mergedPatient);
 
@@ -40,7 +40,7 @@ Patient.PrintByBoolMask(mergedPatient);
 
 // var patients = new List<Patient> { patient1, patient2, patient3, patient4 };
 
-// Patient.Shit(
+// Patient.RewriteDublicates(
 //     patient1,
 //     patient4,
 //     mask,
@@ -51,14 +51,14 @@ Patient.PrintByBoolMask(mergedPatient);
 
 
 
-public enum GenderEnum
+enum GenderEnum
 {
     Male,
     Female
 }
 
 //domain model( task 1)
-public sealed class Patient
+sealed class Patient
 {
     private static int _counterId = 1;
 
@@ -78,10 +78,9 @@ public sealed class Patient
         Gender = gender;
     }
 
-    // Конструктор копирования
     public Patient(Patient other)
     {
-        Id = _counterId++;      // новый уникальный Id
+        Id = _counterId++;
         Name = other.Name;
         Age = other.Age;
         Weight = other.Weight;
@@ -160,8 +159,43 @@ public sealed class Patient
         return true;
     }
 
+    
+
+    public static void RewriteDublicates(
+        Patient comparePatient,
+        Patient copyPatient,
+        PatientFieldMask compareMask,
+        PatientFieldMask copyMask,
+        List<Patient> patients)
+    {
+        Patient comparePatientTemp = new Patient(comparePatient);
+
+        for (int i = 0; i < patients.Count; i++)
+        {
+            if (EqualByMask(patients[i], comparePatientTemp, compareMask))
+            {
+                PatientExtensions.CopyFiedsByMask(copyPatient, patients[i], copyMask);
+                copyPatient.CopyFiedsByMask(patients[i], copyMask);
+            }
+        }
+    }
+
+    public static Patient MergePatients(Patient a, Patient b, PatientFields mask)
+    {
+        return new Patient(
+            name: (mask & PatientFields.Name) != 0 ? b.Name : a.Name,
+            age: (mask & PatientFields.Age) != 0 ? b.Age : a.Age,
+            weight: (mask & PatientFields.Weight) != 0 ? b.Weight : a.Weight,
+            gender: (mask & PatientFields.Gender) != 0 ? b.Gender : a.Gender
+        );
+    }
+
+}
+
+public static class PatientExtensions
+{
     public static void CopyFiedsByMask(
-        Patient source,
+        this Patient source,
         Patient target,
         PatientFieldMask mask)
     {
@@ -190,35 +224,6 @@ public sealed class Patient
             target.Gender = source.Gender;
         }
     }
-
-    public static void Shit(
-        Patient comparePatient,
-        Patient copyPatient,
-        PatientFieldMask compareMask,
-        PatientFieldMask copyMask,
-        List<Patient> patients)
-    {
-        Patient comparePatientTemp = new Patient(comparePatient);
-
-        for (int i = 0; i < patients.Count; i++)
-        {
-            if (EqualByMask(patients[i], comparePatientTemp, compareMask))
-            {
-                CopyFiedsByMask(copyPatient, patients[i], copyMask);
-            }
-        }
-    }
-
-    public static Patient MergePatients(Patient a, Patient b, PatientFields mask)
-    {
-        return new Patient(
-            name:   (mask & PatientFields.Name)   != 0 ? b.Name   : a.Name,
-            age:    (mask & PatientFields.Age)    != 0 ? b.Age    : a.Age,
-            weight: (mask & PatientFields.Weight) != 0 ? b.Weight : a.Weight,
-            gender: (mask & PatientFields.Gender) != 0 ? b.Gender : a.Gender
-        );
-    }
-
 }
 
 //Field mask(task 3)
@@ -242,12 +247,10 @@ public enum PatientFields
 }
 
 //db simulation( task 2)
-public sealed class Database
+sealed class Database
 {
 
     public readonly List<Patient> _patients = new();
-
-    // public IEnumerable<Patient> Patients => _patients;
 
     public Patient Add(Patient patient)
     {
